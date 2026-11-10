@@ -173,6 +173,17 @@
   </div>
 </aside>
 
+<!-- Visualizzatore tavole PDF -->
+<div id="pdfview" hidden>
+  <div class="pv-head">
+    <button class="pv-back" id="pvClose"><svg viewBox="0 0 24 24"><path d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12l6.6-6.6Z"/></svg>Mappa</button>
+    <div class="pv-title" id="pvTitle"></div>
+    <div class="pv-pages" id="pvPages" hidden><button id="pvPrev">‹</button><span id="pvPageN"></span><button id="pvNext">›</button></div>
+  </div>
+  <div id="pvMap"></div>
+  <div id="pvMsg" hidden></div>
+</div>
+
 <div id="toast" hidden></div>
 <div id="viewer" hidden><img alt=""><button class="x">×</button></div>
 

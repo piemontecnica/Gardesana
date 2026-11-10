@@ -733,6 +733,97 @@ $('#btnDocsOffline').onclick = async () => {
 };
 map.on('popupopen', e => { const el = e.popup.getElement(); if (el && el.querySelector('a[data-doc]')) markCached(el); });
 
+/* ---------------- visualizzatore tavole PDF (pdf.js + Leaflet, zoom e pan con le dita) ---------------- */
+let pdfjsP = null;
+function loadPdfJs() {
+  if (!pdfjsP) pdfjsP = new Promise((res, rej) => {
+    const sc = document.createElement('script'); sc.src = 'lib/pdfjs/pdf.min.js';
+    sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'lib/pdfjs/pdf.worker.min.js'; res(window.pdfjsLib); };
+    sc.onerror = () => { pdfjsP = null; rej(new Error('visualizzatore non disponibile')); };
+    document.head.appendChild(sc);
+  });
+  return pdfjsP;
+}
+const PV = { map: null, doc: null, page: null, n: 1, layer: null, open: false, token: 0 };
+function pvMsg(t) { const m = $('#pvMsg'); m.textContent = t || ''; m.hidden = !t; }
+const PdfTiles = L.GridLayer.extend({
+  createTile(coords, done) {
+    const ts = this.getTileSize(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cv = document.createElement('canvas'); cv.width = ts.x * dpr; cv.height = ts.y * dpr;
+    const page = this.options.page, scale = Math.pow(2, coords.z) * dpr;
+    const job = () => {
+      if (!cv.isConnected && cv._dropped) { done(null, cv); return Promise.resolve(); }
+      const vp = page.getViewport({ scale });
+      const ctx = cv.getContext('2d'), ox = -coords.x * ts.x * dpr, oy = -coords.y * ts.y * dpr;
+      ctx.fillStyle = '#fff'; ctx.fillRect(ox, oy, vp.width, vp.height); // foglio bianco solo dentro la pagina
+      const task = page.render({ canvasContext: ctx, viewport: vp, transform: [1, 0, 0, 1, ox, oy], background: 'rgba(0,0,0,0)' });
+      cv._task = task;
+      return task.promise.then(() => done(null, cv), () => done(null, cv));
+    };
+    pvQueue(job);
+    return cv;
+  },
+});
+PdfTiles.addInitHook(function () { this.on('tileunload', e => { e.tile._dropped = true; if (e.tile._task) e.tile._task.cancel(); }); });
+let pvRunning = 0; const pvJobs = [];
+function pvQueue(job) { pvJobs.push(job); pvPump(); }
+function pvPump() {
+  while (pvRunning < 2 && pvJobs.length) {
+    const j = pvJobs.shift(); pvRunning++;
+    j().finally(() => { pvRunning--; pvPump(); });
+  }
+}
+async function pvShowPage(n) {
+  const tk = PV.token;
+  PV.n = n; $('#pvPageN').textContent = `${n} / ${PV.doc.numPages}`;
+  if (PV.layer) { PV.map.removeLayer(PV.layer); PV.layer = null; } pvJobs.length = 0;
+  const page = await PV.doc.getPage(n); if (tk !== PV.token) return;
+  PV.page = page;
+  const vp = page.getViewport({ scale: 1 });
+  const b = L.latLngBounds([[-vp.height, 0], [0, vp.width]]);
+  PV.layer = new PdfTiles({ page, bounds: b, noWrap: true, tileSize: 256, minZoom: -6, maxZoom: 6, maxNativeZoom: 3, minNativeZoom: -6, keepBuffer: 1, updateWhenZooming: false }).addTo(PV.map);
+  PV.map.setMaxBounds(b.pad(0.5));
+  PV.map.fitBounds(b, { animate: false });
+  PV.map.setMinZoom(PV.map.getZoom() - 1);
+  pvMsg('');
+}
+async function openPdf(file, title) {
+  const view = $('#pdfview'); view.hidden = false; PV.open = true; const tk = ++PV.token;
+  history.pushState({ pdfview: 1 }, '');
+  $('#pvTitle').textContent = title; $('#pvPages').hidden = true; pvMsg('Apertura tavola…');
+  if (!PV.map) {
+    PV.map = L.map('pvMap', { crs: L.CRS.Simple, minZoom: -6, maxZoom: 6, zoomSnap: 0.25, zoomDelta: 0.5, attributionControl: false, bounceAtZoomLimits: false, maxBoundsViscosity: 0.8 });
+  }
+  PV.map.invalidateSize();
+  try {
+    const lib = await loadPdfJs();
+    const buf = await fetch(file).then(r => { if (!r.ok) throw new Error(r.status === 504 ? 'tavola non scaricata per l\'uso offline' : 'errore ' + r.status); return r.arrayBuffer(); });
+    if (tk !== PV.token) return;
+    if (PV.doc) { PV.doc.destroy(); PV.doc = null; }
+    PV.doc = await lib.getDocument({ data: buf, isEvalSupported: false }).promise;
+    if (tk !== PV.token) return;
+    $('#pvPages').hidden = PV.doc.numPages < 2;
+    await pvShowPage(1);
+  } catch (e) { if (tk === PV.token) pvMsg('Impossibile aprire la tavola: ' + e.message); }
+}
+function closePdf(fromPop) {
+  if (!PV.open) return;
+  PV.open = false; PV.token++; pvJobs.length = 0;
+  $('#pdfview').hidden = true; pvMsg('');
+  if (PV.layer) { PV.map.removeLayer(PV.layer); PV.layer = null; }
+  if (PV.doc) { PV.doc.destroy(); PV.doc = null; }
+  if (!fromPop && history.state && history.state.pdfview) history.back();
+}
+$('#pvClose').onclick = () => closePdf(false);
+$('#pvPrev').onclick = () => { if (PV.doc && PV.n > 1) pvShowPage(PV.n - 1); };
+$('#pvNext').onclick = () => { if (PV.doc && PV.n < PV.doc.numPages) pvShowPage(PV.n + 1); };
+addEventListener('popstate', () => { if (PV.open) closePdf(true); });
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[data-doc]'); if (!a) return;
+  e.preventDefault();
+  openPdf(a.dataset.doc, a.textContent.trim());
+});
+
 /* ---------------- avvio ---------------- */
 (async function init() {
   try { await DB.open(); await loadPunti(); await loadTracce(); } catch (e) { toast('Archivio locale non disponibile: i punti non verranno salvati', 6000); }

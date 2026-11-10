@@ -1,10 +1,10 @@
 /* Service worker: app shell + cache delle tile per uso in campo */
-const SHELL = 'gard-shell-v2', TILES = 'gard-tiles-v1', DOCS = 'gard-docs-v1';
+const SHELL = 'gard-shell-v3', TILES = 'gard-tiles-v1', DOCS = 'gard-docs-v1';
 const SHELL_FILES = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png',
   'data/fogli.geojson', 'data/documenti.json', 'data/pozzetti.geojson', 'data/chiusure.geojson', 'data/impianti.geojson', 'data/tub_esistenti.geojson',
   'data/tub_ghisa.geojson', 'data/tub_pead.geojson', 'data/tub_prfv.geojson', 'data/viab_alt.geojson',
   'lib/leaflet.css', 'lib/leaflet.js',
-  'lib/jszip.min.js'];
+  'lib/jszip.min.js', 'lib/pdfjs/pdf.min.js', 'lib/pdfjs/pdf.worker.min.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(SHELL).then(c => Promise.all(SHELL_FILES.map(u => c.add(u).catch(() => null)))).then(() => self.skipWaiting()));
 });
