@@ -1,0 +1,25 @@
+{
+"type": "FeatureCollection",
+"name": "Camere e pozzetti",
+"features": [
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SFIATO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7153834, 45.5586501 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7184949, 45.5533568 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO CON SARACINESCA", "Note": null, "classificazione": "Pozzetto di SFIATO CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7181899, 45.5539226 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7164343, 45.5563249 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.714639, 45.5595207 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7237337, 45.5476617 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "POZZETTO DI CALMA", "Note": null, "classificazione": "Pozzetto di CALMA" }, "geometry": { "type": "Point", "coordinates": [ 10.7223618, 45.5430834 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO CON SARACINESCA", "Note": null, "classificazione": "Pozzetto di SCARICO CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7228872, 45.5430072 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SFIATO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7254249, 45.5401364 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7268614, 45.5357228 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO CON SARACINESCA", "Note": null, "classificazione": "Pozzetto di SFIATO CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7270225, 45.5334109 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7264956, 45.5302255 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO CON SARACINESCA", "Note": null, "classificazione": "Pozzetto di SFIATO CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7286847, 45.5254855 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SCARICO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SCARICO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7289773, 45.5249055 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "SFIATO SEMPLICE", "Note": null, "classificazione": "Pozzetto di SFIATO SEMPLICE" }, "geometry": { "type": "Point", "coordinates": [ 10.7289913, 45.5248767 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "POZZETTO ISPEZIONE", "Note": null, "classificazione": "Pozzetto di ISPEZIONE" }, "geometry": { "type": "Point", "coordinates": [ 10.7297684, 45.5208352 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "POZZETTO ISPEZIONE", "Note": null, "classificazione": "Pozzetto di ISPEZIONE" }, "geometry": { "type": "Point", "coordinates": [ 10.7305974, 45.5174817 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "VALVOLA A FARFALLA PN 16", "Note": null, "classificazione": "Pozzetto di MANOVRA CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7306725, 45.5171955 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "VALVOLA A FARFALLA PN 16", "Note": null, "classificazione": "Pozzetto di MANOVRA CON SARACINESCA" }, "geometry": { "type": "Point", "coordinates": [ 10.7095446, 45.5672339 ] } }
+]
+}

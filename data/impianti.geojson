@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "Impianti e vasche",
+"features": [
+{ "type": "Feature", "properties": { "Tipologia": "IS ROCCA VELA (potenziamento)", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.7124691, 45.5629803 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "IS SAN SEVERO nuovo", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.7183383, 45.5533174 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "VASCA DI CALMA", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.7230201, 45.5500268 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "IS ESISTENTE CISANO", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.7264369, 45.531708 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "VASCA ROMPITRATTA", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.7299506, 45.5211208 ] } },
+{ "type": "Feature", "properties": { "Tipologia": "IS ESISTENTE PERGOLANA", "Note": null, "classificazione": null }, "geometry": { "type": "Point", "coordinates": [ 10.729515, 45.5168476 ] } }
+]
+}
