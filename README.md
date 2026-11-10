@@ -1,6 +1,6 @@
 # Sopralluogo 26_071 Gardesana
 
-Webapp statica (Leaflet) per il sopralluogo del collettore fognario Gardesana: planimetrie di progetto, opere vettoriali, GPS, punti con note e foto, tracce, misure ed esportazione.
+Webapp statica ( Leaflet ) per il sopralluogo del collettore fognario Gardesana: planimetrie di progetto, opere vettoriali, GPS, punti con note e foto, tracce, misure ed esportazione.
 
 ## Pubblicazione su GitHub Pages
 La cartella contiene circa 20.000 file di tile: il caricamento dal browser di GitHub (max 100 file per volta) non basta, usa **git** o **GitHub Desktop**.
