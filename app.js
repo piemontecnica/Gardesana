@@ -824,6 +824,14 @@ document.addEventListener('click', e => {
   openPdf(a.dataset.doc, a.textContent.trim());
 });
 
+/* ---------------- guida rapida ---------------- */
+document.querySelectorAll('#intro [data-ico]').forEach(el => { const src = document.getElementById(el.dataset.ico); if (src) el.innerHTML = src.innerHTML; });
+function showIntro() { $('#introHide').checked = ls('introHide') === '1'; $('#intro').hidden = false; }
+$('#introOk').onclick = () => { ls('introHide', $('#introHide').checked ? '1' : '0'); $('#intro').hidden = true; };
+$('#intro').addEventListener('click', e => { if (e.target.id === 'intro') $('#introOk').click(); });
+$('#btnHelp').onclick = showIntro;
+if (ls('introHide') !== '1') showIntro();
+
 /* ---------------- avvio ---------------- */
 (async function init() {
   try { await DB.open(); await loadPunti(); await loadTracce(); } catch (e) { toast('Archivio locale non disponibile: i punti non verranno salvati', 6000); }

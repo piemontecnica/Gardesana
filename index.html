@@ -22,7 +22,7 @@
     <strong>26_071 Gardesana</strong>
     <span>Sopralluogo · collettore fognario</span>
   </div>
-  <div id="netstate" class="pill" title="Stato connessione">online</div>
+  <div class="tb-r"><div id="netstate" class="pill" title="Stato connessione">online</div><button id="btnHelp" class="help" title="Guida rapida">?</button></div>
 </header>
 
 <!-- Pulsanti laterali -->
@@ -182,6 +182,26 @@
   </div>
   <div id="pvMap"></div>
   <div id="pvMsg" hidden></div>
+</div>
+
+<!-- Guida rapida all'avvio -->
+<div id="intro" hidden>
+  <div class="intro-card" role="dialog" aria-labelledby="introT">
+    <h2 id="introT">Sopralluogo 26_071 Gardesana</h2>
+    <p class="intro-sub">Planimetrie di progetto, condotte, pozzetti e impianti sopra il satellite. Ecco come si usa:</p>
+    <ul class="intro-list">
+      <li><span class="ii" data-ico="btnLayers"></span><div><b>Livelli</b> – accendi o spegni gli strati, regola la trasparenza, vai a un foglio.</div></li>
+      <li><span class="ii dot"></span><div><b>Tocca un impianto o un pozzetto</b> – vedi le tavole PDF collegate e aprile.</div></li>
+      <li><span class="ii" data-ico="btnGps"></span><div><b>GPS</b> – mostra dove sei; tocca di nuovo per seguirti.</div></li>
+      <li><span class="ii fabi">+</span><div><b>Punto</b> – segna un punto con note, priorità e foto.</div></li>
+      <li><span class="ii" data-ico="btnTrack"></span><div><b>Traccia</b> registra il percorso, <span class="ii in" data-ico="btnMeasure"></span><b>Misura</b> le distanze.</div></li>
+      <li><span class="ii" data-ico="btnList"></span><div><b>Elenco</b> – rivedi i punti ed <b>esporta lo ZIP</b> a fine sopralluogo.</div></li>
+    </ul>
+    <div class="intro-tip"><b>Prima di partire:</b> in Livelli → Offline scarica planimetrie e tavole PDF, così funziona anche senza rete. I punti restano sul telefono finché non li esporti.</div>
+    <label class="intro-chk"><input type="checkbox" id="introHide"> Non mostrare all'avvio</label>
+    <button class="btn primary wide" id="introOk">Inizia</button>
+    <p class="intro-foot">Puoi riaprire questa guida con il tasto <b>?</b> in alto.</p>
+  </div>
 </div>
 
 <div id="toast" hidden></div>
