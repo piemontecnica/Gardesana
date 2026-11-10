@@ -136,10 +136,45 @@ const VEC = [
 const vecLayers = {};
 const vecData = {};
 
-function popupHtml(title, props, extra = '') {
+function popupHtml(title, props, extra = '', after = '') {
   const rows = Object.entries(props).filter(([k, v]) => v !== null && v !== '' && k !== 'Lunghezza')
     .map(([k, v]) => `<tr><td>${esc(k)}</td><td><b>${esc(v)}</b></td></tr>`).join('');
-  return `<h4>${esc(title)}</h4><table>${rows}${extra}</table>`;
+  return `<h4>${esc(title)}</h4><table>${rows}${extra}</table>${after}`;
+}
+
+/* tavole PDF collegate agli elementi (data/documenti.json, file in docs/) */
+const DOCS_CACHE = 'gard-docs-v1';
+let DOCS = { tavole: {}, collegamenti: {} };
+async function loadDocs() {
+  try { DOCS = await fetch('data/documenti.json').then(r => r.json()); } catch (e) { console.warn('documenti.json', e); }
+  const all = Object.values(DOCS.tavole);
+  const n = all.length, mb = all.reduce((s, d) => s + d.mb, 0);
+  const info = $('#docsInfo'); if (info) info.textContent = `${n} tavole PDF di impianti, vasche e pozzetti (~${Math.round(mb)} MB).`;
+  refreshDocsState();
+}
+function docsHtml(group, key) {
+  const codes = (DOCS.collegamenti[group] || {})[key] || [];
+  if (!codes.length) return '';
+  const items = codes.map(c => DOCS.tavole[c]).filter(Boolean).map(d => {
+    const code = d.file.replace(/^docs\//, '').split('_')[0];
+    return `<li><a href="${esc(d.file)}" target="_blank" rel="noopener" data-doc="${esc(d.file)}"><b>${esc(code)}</b> ${esc(d.titolo)}</a><span class="dmeta">${String(d.mb).replace('.', ',')} MB<i class="dok" title="Disponibile offline"></i></span></li>`;
+  }).join('');
+  return `<div class="docs"><div class="docs-h">Tavole di riferimento</div><ul>${items}</ul></div>`;
+}
+async function markCached(root) {
+  if (!('caches' in window)) return;
+  const c = await caches.open(DOCS_CACHE);
+  for (const a of root.querySelectorAll('a[data-doc]')) {
+    const hit = await c.match(a.dataset.doc);
+    a.parentElement.classList.toggle('cached', !!hit);
+  }
+}
+async function refreshDocsState() {
+  if (!('caches' in window)) return;
+  const c = await caches.open(DOCS_CACHE);
+  const files = Object.values(DOCS.tavole).map(d => d.file);
+  let n = 0; for (const f of files) if (await c.match(f)) n++;
+  const st = $('#docsState'); if (st) st.textContent = files.length ? `Offline: ${n} / ${files.length} tavole sul dispositivo` : '';
 }
 
 async function loadVectors() {
@@ -167,14 +202,14 @@ async function loadVectors() {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
           pointToLayer: (f, ll) => L.circleMarker(ll, { pane: 'vett', radius: 6, color: '#801119', weight: 1.5, fillColor: POZZ_COL[f.properties.classificazione] || '#999', fillOpacity: 1 }),
-          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.classificazione || 'Pozzetto', { Tipologia: f.properties.Tipologia, Note: f.properties.Note })),
+          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.classificazione || 'Pozzetto', { Tipologia: f.properties.Tipologia, Note: f.properties.Note }, '', docsHtml('pozzetti', f.properties.classificazione)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       } else {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
           pointToLayer: (f, ll) => L.circleMarker(ll, { pane: 'vett', radius: 9, color: '#232323', weight: 2, fillColor: '#a47158', fillOpacity: 1 })
             .bindTooltip(f.properties.Tipologia || '', { permanent: true, direction: 'right', offset: [10, 0], className: 'foglio-lbl' }),
-          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.Tipologia || 'Impianto', { Note: f.properties.Note })),
+          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.Tipologia || 'Impianto', { Note: f.properties.Note }, '', docsHtml('impianti', f.properties.Tipologia)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       }
       vecLayers[v.id] = lyr;
@@ -680,8 +715,27 @@ $('#btnOffline').onclick = async () => {
 };
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { });
 
+$('#btnDocsOffline').onclick = async () => {
+  if (!('caches' in window)) return toast('Il browser non supporta la cache offline');
+  const btn = $('#btnDocsOffline'); btn.disabled = true;
+  const prog = $('#docsProg'); prog.hidden = false;
+  const files = Object.values(DOCS.tavole).map(d => d.file);
+  const cache = await caches.open(DOCS_CACHE);
+  let done = 0, err = 0;
+  const upd = () => { prog.firstElementChild.style.width = (100 * done / files.length) + '%'; prog.lastElementChild.textContent = `${done} / ${files.length}`; };
+  upd();
+  for (const f of files) {
+    try { if (!(await cache.match(f))) { const r = await fetch(f); if (r.ok) await cache.put(f, r); else err++; } } catch (e) { err++; }
+    done++; upd();
+  }
+  toast(err ? `Scaricate ${files.length - err} tavole, ${err} non riuscite: riprova con rete migliore` : 'Tavole disponibili offline', 4000);
+  btn.disabled = false; refreshDocsState();
+};
+map.on('popupopen', e => { const el = e.popup.getElement(); if (el && el.querySelector('a[data-doc]')) markCached(el); });
+
 /* ---------------- avvio ---------------- */
 (async function init() {
   try { await DB.open(); await loadPunti(); await loadTracce(); } catch (e) { toast('Archivio locale non disponibile: i punti non verranno salvati', 6000); }
+  await loadDocs();
   await Promise.all([loadVectors(), loadFogli()]);
 })();

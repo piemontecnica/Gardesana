@@ -1,7 +1,7 @@
 /* Service worker: app shell + cache delle tile per uso in campo */
-const SHELL = 'gard-shell-v1', TILES = 'gard-tiles-v1';
+const SHELL = 'gard-shell-v2', TILES = 'gard-tiles-v1', DOCS = 'gard-docs-v1';
 const SHELL_FILES = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png',
-  'data/fogli.geojson', 'data/pozzetti.geojson', 'data/chiusure.geojson', 'data/impianti.geojson', 'data/tub_esistenti.geojson',
+  'data/fogli.geojson', 'data/documenti.json', 'data/pozzetti.geojson', 'data/chiusure.geojson', 'data/impianti.geojson', 'data/tub_esistenti.geojson',
   'data/tub_ghisa.geojson', 'data/tub_pead.geojson', 'data/tub_prfv.geojson', 'data/viab_alt.geojson',
   'lib/leaflet.css', 'lib/leaflet.js',
   'lib/jszip.min.js'];
@@ -9,7 +9,7 @@ self.addEventListener('install', e => {
   e.waitUntil(caches.open(SHELL).then(c => Promise.all(SHELL_FILES.map(u => c.add(u).catch(() => null)))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => ![SHELL, TILES].includes(k)).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => ![SHELL, TILES, DOCS].includes(k)).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 const isTile = u => /\/tiles\/.+\.webp$/.test(u.pathname) || /arcgisonline\.com|tile\.openstreetmap\.org/.test(u.hostname);
 self.addEventListener('fetch', e => {
@@ -22,6 +22,16 @@ self.addEventListener('fetch', e => {
       if (hit) return hit;
       try { const r = await fetch(e.request); if (r.ok || r.type === 'opaque') c.put(e.request, r.clone()); return r; }
       catch (err) { return new Response('', { status: 504 }); }
+    }));
+    return;
+  }
+  if (/\/docs\/.+\.pdf$/i.test(u.pathname)) {
+    // tavole PDF: dalla cache se scaricate, altrimenti dalla rete
+    e.respondWith(caches.open(DOCS).then(async c => {
+      const hit = await c.match(u.pathname.replace(/^.*?\/docs\//, 'docs/')) || await c.match(e.request, { ignoreSearch: true });
+      if (hit) return hit;
+      try { return await fetch(e.request); }
+      catch (err) { return new Response('Tavola non disponibile offline: scaricala dal pannello Livelli quando sei in rete.', { status: 504, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }); }
     }));
     return;
   }

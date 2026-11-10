@@ -1,0 +1,212 @@
+{
+ "_nota": "Elenco tavole collegate agli elementi della mappa. Per aggiungere una tavola: copia il PDF in docs/, aggiungilo in 'tavole' e collega il codice all'elemento (chiave = Tipologia per impianti, classificazione per pozzetti).",
+ "tavole": {
+  "B-63": {
+   "titolo": "Particolari costruttivi collettore in pressione GH600",
+   "rev": "001",
+   "file": "docs/B-63-001_Particolari_costruttivi_collettore_in_pressione_GH600.pdf",
+   "mb": 0.8
+  },
+  "B-64": {
+   "titolo": "Particolari costruttivi collettore a gravità PRFV e by-pass PEAD560",
+   "rev": "001",
+   "file": "docs/B-64-001_Particolari_costruttivi_collettore_a_gravita_PRFV_e_by_pass_PEAD560.pdf",
+   "mb": 1.6
+  },
+  "B-67": {
+   "titolo": "IS esistente Rocca Vela – pianta e sezioni",
+   "rev": "000",
+   "file": "docs/B-67-000_IS_esistente_Rocca_Vela_pianta_e_sezioni.pdf",
+   "mb": 5.3
+  },
+  "B-68": {
+   "titolo": "IS esistente San Severo – pianta e sezioni",
+   "rev": "000",
+   "file": "docs/B-68-000_IS_esistente_San_Severo_pianta_e_sezioni.pdf",
+   "mb": 10.4
+  },
+  "B-69": {
+   "titolo": "IS esistente Cisano – pianta e sezioni",
+   "rev": "000",
+   "file": "docs/B-69-000_IS_esistente_Cisano_pianta_e_sezioni.pdf",
+   "mb": 8.6
+  },
+  "B-70": {
+   "titolo": "IS esistente Pergolana – pianta e sezioni",
+   "rev": "000",
+   "file": "docs/B-70-000_IS_esistente_Pergolana_pianta_e_sezioni.pdf",
+   "mb": 1.4
+  },
+  "B-71": {
+   "titolo": "Nuovo IS Rocca Vela – inquadramento e pianta",
+   "rev": "001",
+   "file": "docs/B-71-001_Nuovo_IS_Rocca_Vela_inquadramento_e_pianta.pdf",
+   "mb": 6.2
+  },
+  "B-72": {
+   "titolo": "Nuovo IS Rocca Vela – sezioni",
+   "rev": "001",
+   "file": "docs/B-72-001_Nuovo_IS_Rocca_Vela_sezioni.pdf",
+   "mb": 1.1
+  },
+  "B-73": {
+   "titolo": "Nuovo IS San Severo – planimetria e pianta",
+   "rev": "001",
+   "file": "docs/B-73-001_Nuovo_IS_San_Severo_planimetria_e_pianta.pdf",
+   "mb": 6.6
+  },
+  "B-74": {
+   "titolo": "Nuovo IS San Severo – sezioni",
+   "rev": "001",
+   "file": "docs/B-74-001_Nuovo_IS_San_Severo_sezioni.pdf",
+   "mb": 0.6
+  },
+  "B-75": {
+   "titolo": "Vasca rompitratta – planimetria e inquadramento catastale",
+   "rev": "000",
+   "file": "docs/B-75-000_Vasca_rompitratta_planimetria_e_inquadramento_catastale.pdf",
+   "mb": 6.6
+  },
+  "B-76": {
+   "titolo": "Vasca rompitratta – pianta e sezioni",
+   "rev": "001",
+   "file": "docs/B-76-001_Vasca_rompitratta_pianta_e_sezioni.pdf",
+   "mb": 1.1
+  },
+  "C-06": {
+   "titolo": "Nuovo IS San Severo – opere provvisorie, fasi esecutive",
+   "rev": "002",
+   "file": "docs/C-06-002_Nuovo_IS_San_Severo_opere_provvisorie_fasi_esecutive.pdf",
+   "mb": 3.1
+  },
+  "C-1": {
+   "titolo": "Nuovo IS Rocca Vela – opere strutturali tav. 1",
+   "rev": "001",
+   "file": "docs/C-1-001_Nuovo_IS_Rocca_Vela_opere_strutturali_tav_1.pdf",
+   "mb": 1.1
+  },
+  "C-13": {
+   "titolo": "Vasca rompitratta – carpenterie",
+   "rev": "002",
+   "file": "docs/C-13-002_Vasca_rompitratta_carpenterie.pdf",
+   "mb": 0.8
+  },
+  "C-14": {
+   "titolo": "Vasca rompitratta – armature",
+   "rev": "001",
+   "file": "docs/C-14-001_Vasca_rompitratta_armature.pdf",
+   "mb": 0.8
+  },
+  "C-15": {
+   "titolo": "Nuovo IS Rocca Vela – impianti elettrici, planimetrie",
+   "rev": "001",
+   "file": "docs/C-15-001_Nuovo_IS_Rocca_Vela_impianti_elettrici_planimetrie.pdf",
+   "mb": 0.7
+  },
+  "C-16": {
+   "titolo": "Rocca Vela – schema unifilare",
+   "rev": "000",
+   "file": "docs/C-16-000_Rocca_Vela_schema_unifilare.pdf",
+   "mb": 4.0
+  },
+  "C-17": {
+   "titolo": "Nuovo IS San Severo – impianti elettrici, planimetrie",
+   "rev": "001",
+   "file": "docs/C-17-001_Nuovo_IS_San_Severo_impianti_elettrici_planimetrie.pdf",
+   "mb": 0.4
+  },
+  "C-18": {
+   "titolo": "San Severo – schema unifilare",
+   "rev": "000",
+   "file": "docs/C-18-000_San_Severo_schema_unifilare.pdf",
+   "mb": 3.6
+  },
+  "C-2": {
+   "titolo": "Nuovo IS Rocca Vela – opere strutturali tav. 2",
+   "rev": "000",
+   "file": "docs/C-2-000_Nuovo_IS_Rocca_Vela_opere_strutturali_tav_2.pdf",
+   "mb": 0.9
+  },
+  "C-3": {
+   "titolo": "Nuovo IS San Severo – carpenterie",
+   "rev": "002",
+   "file": "docs/C-3-002_Nuovo_IS_San_Severo_carpenterie.pdf",
+   "mb": 0.9
+  },
+  "C-4": {
+   "titolo": "Nuovo IS San Severo – armature",
+   "rev": "002",
+   "file": "docs/C-4-002_Nuovo_IS_San_Severo_armature.pdf",
+   "mb": 0.9
+  },
+  "C-5": {
+   "titolo": "Nuovo IS San Severo – opere provvisionali",
+   "rev": "001",
+   "file": "docs/C-5-001_Nuovo_IS_San_Severo_opere_provvisionali.pdf",
+   "mb": 0.6
+  }
+ },
+ "collegamenti": {
+  "impianti": {
+   "IS ROCCA VELA (potenziamento)": [
+    "B-67",
+    "B-71",
+    "B-72",
+    "C-1",
+    "C-2",
+    "C-15",
+    "C-16"
+   ],
+   "IS SAN SEVERO nuovo": [
+    "B-68",
+    "B-73",
+    "B-74",
+    "C-3",
+    "C-4",
+    "C-5",
+    "C-06",
+    "C-17",
+    "C-18"
+   ],
+   "VASCA DI CALMA": [
+    "B-64"
+   ],
+   "IS ESISTENTE CISANO": [
+    "B-69"
+   ],
+   "VASCA ROMPITRATTA": [
+    "B-75",
+    "B-76",
+    "C-13",
+    "C-14"
+   ],
+   "IS ESISTENTE PERGOLANA": [
+    "B-70"
+   ]
+  },
+  "pozzetti": {
+   "Pozzetto di CALMA": [
+    "B-64"
+   ],
+   "Pozzetto di ISPEZIONE": [
+    "B-63",
+    "B-64"
+   ],
+   "Pozzetto di MANOVRA CON SARACINESCA": [
+    "B-63"
+   ],
+   "Pozzetto di SCARICO CON SARACINESCA": [
+    "B-63"
+   ],
+   "Pozzetto di SCARICO SEMPLICE": [
+    "B-63"
+   ],
+   "Pozzetto di SFIATO CON SARACINESCA": [
+    "B-63"
+   ],
+   "Pozzetto di SFIATO SEMPLICE": [
+    "B-63"
+   ]
+  }
+ }
+}

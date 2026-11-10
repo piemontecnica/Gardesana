@@ -23,6 +23,7 @@ Nota: un repo pubblico rende visibili le tavole a chiunque abbia il link (GitHub
 - **Traccia**: registra il percorso fatto (pulsante rosso durante la registrazione).
 - **Misura**: distanze cumulate toccando la mappa.
 - **Livelli**: sfondo satellite/stradale, opacità tavole, planimetria generale, quadro d'unione, "Vai al foglio", download offline delle planimetrie (~40 MB).
+- **Tavole PDF**: tocca un impianto, una vasca o un pozzetto per vedere le tavole collegate e aprirle. In Livelli → "Scarica tavole PDF per uso offline" (~68 MB) le salva sul telefono; nel popup compare "✓ offline" accanto a quelle già scaricate.
 - **Elenco**: punti e tracce, esportazione ZIP (GeoJSON + CSV con coordinate UTM32N + foto + report.html stampabile), importazione ZIP/GeoJSON per unire i rilievi dei colleghi.
 
 I dati restano sul dispositivo (IndexedDB) finché non vengono esportati: esportare lo ZIP a fine sopralluogo. Per installarla come app: menu del browser → "Aggiungi a schermata Home".
@@ -30,6 +31,7 @@ I dati restano sul dispositivo (IndexedDB) finché non vengono esportati: esport
 ## Contenuto
 - `tiles/tavole` – tavole B-14÷B-29 e B-35÷B-46 (B-15 e B-17 da Q2-GH e Q4-GH), WebP z13-20 dai GeoTIFF georeferenziati in QGIS (nero = trasparente come nel progetto).
 - `tiles/generale` – planimetria generale nord, z12-18.
+- `docs/` – tavole PDF di impianti, vasche e particolari dei pozzetti; i collegamenti elemento → tavole sono in `data/documenti.json` (modificabile a mano).
 - `data/*.geojson` – layer vettoriali del progetto QGIS `Gardesana.qgz` (WGS84) e quadro d'unione fogli.
 - Tavole B-30÷B-34 non incluse: non georeferenziate.
 
