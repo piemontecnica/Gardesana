@@ -137,6 +137,29 @@ function impSvg(k, s = 28) {
   return `<svg width="${s}" height="${s}" viewBox="0 0 28 28">${st.halo ? `<circle cx="14" cy="14" r="13" fill="${st.halo}" stroke="#5aa9b5" stroke-width="1"/>` : ''}<circle cx="14" cy="14" r="${st.halo ? 9.5 : 11}" fill="${st.fill}" stroke="${st.stroke}" stroke-width="2"/><path d="M14 ${st.halo ? 8 : 7}l${st.halo ? 5.5 : 6.5} ${st.halo ? 9.5 : 11}h-${st.halo ? 11 : 13}z" fill="#fff"/></svg>`;
 }
 function impIcon(k) { return L.divIcon({ className: 'imp-ico', html: impSvg(k), iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12], tooltipAnchor: [12, 0] }); }
+/* simboli camere e pozzetti (legenda tavola B-13); ispezione e calma non sono in legenda: simboli coerenti */
+const PZ_R = '#e00000', PZ_D = '#8a0000';
+const PZ_VALVE = x => `<path d="M${x} 7v10l5-5zM${x + 10} 7v10l-5-5z" fill="${PZ_R}" stroke="${PZ_D}" stroke-width="1" stroke-linejoin="round"/>`;
+const PZ_SFIATO = `<path d="M8 6.5V3" stroke="${PZ_D}" stroke-width="1.2"/><path d="M5.6 3.6 8 0.8l2.4 2.8z" fill="#fff" stroke="${PZ_D}" stroke-width="1"/><circle cx="8" cy="12" r="5.5" fill="#fff" stroke="${PZ_D}" stroke-width="1.2"/><path d="M2.5 12a5.5 5.5 0 0 0 11 0z" fill="${PZ_R}" stroke="${PZ_D}" stroke-width="1.2"/>`;
+const PZ_SCARICO = `<circle cx="8" cy="12" r="5.5" fill="${PZ_R}" stroke="${PZ_D}" stroke-width="1.2"/><path d="M8 17.5v2.3" stroke="${PZ_D}" stroke-width="1.2"/><path d="M5.6 19.8h4.8L8 23.2z" fill="${PZ_R}" stroke="${PZ_D}" stroke-width="1"/>`;
+const POZZ_SYM = {
+  'Pozzetto di MANOVRA CON SARACINESCA': { w: 12, ax: 6, g: PZ_VALVE(1) },
+  'Pozzetto di SFIATO CON SARACINESCA': { w: 28, ax: 8, g: PZ_SFIATO + PZ_VALVE(16) },
+  'Pozzetto di SFIATO SEMPLICE': { w: 16, ax: 8, g: PZ_SFIATO },
+  'Pozzetto di SCARICO CON SARACINESCA': { w: 28, ax: 8, g: PZ_SCARICO + PZ_VALVE(16) },
+  'Pozzetto di SCARICO SEMPLICE': { w: 16, ax: 8, g: PZ_SCARICO },
+  'Pozzetto di ISPEZIONE': { w: 16, ax: 8, g: `<circle cx="8" cy="12" r="6" fill="#fff" stroke="${PZ_R}" stroke-width="2"/><circle cx="8" cy="12" r="2.2" fill="${PZ_R}"/>` },
+  'Pozzetto di CALMA': { w: 16, ax: 8, g: `<rect x="1.5" y="5.5" width="13" height="13" rx="2" fill="#fff" stroke="${PZ_R}" stroke-width="2"/><path d="M4 12.5c1.3-1.4 2.2-1.4 3.5 0s2.2 1.4 3.5 0" fill="none" stroke="${PZ_R}" stroke-width="1.6" stroke-linecap="round"/>` },
+};
+const PZ_K = 1.25; // scala dei simboli sulla mappa
+function pozzSvg(cls, k = PZ_K) {
+  const s = POZZ_SYM[cls] || POZZ_SYM['Pozzetto di ISPEZIONE'];
+  return `<svg width="${s.w * k}" height="${24 * k}" viewBox="0 0 ${s.w} 24">${s.g}</svg>`;
+}
+function pozzIcon(cls) {
+  const s = POZZ_SYM[cls] || POZZ_SYM['Pozzetto di ISPEZIONE'];
+  return L.divIcon({ className: 'pz-ico', html: pozzSvg(cls), iconSize: [s.w * PZ_K, 24 * PZ_K], iconAnchor: [s.ax * PZ_K, 12 * PZ_K], popupAnchor: [0, -10] });
+}
 const CHIUS_COL = { 'chiusura completa strada comunale': '#ff0003' }; // altri: arancio
 const VEC = [
   { id: 'tub_ghisa', file: 'tub_ghisa', label: 'Condotta in progetto – Ghisa DN600', type: 'line',
@@ -150,7 +173,7 @@ const VEC = [
   { id: 'viab_alt', file: 'viab_alt', label: 'Viabilità alternativa', type: 'line',
     styles: [{ color: '#b2df8a', weight: 6 }, { color: '#0e9c43', weight: 2, dashArray: '8 4 2 4' }] },
   { id: 'pozzetti', file: 'pozzetti', label: 'Camere e pozzetti', type: 'point', cat: 'classificazione',
-    legend: Object.entries(POZZ_COL).map(([k, v]) => [k.replace('Pozzetto di ', ''), v]) },
+    legendSvg: Object.keys(POZZ_SYM).map(k => [k.replace('Pozzetto di ', ''), pozzSvg(k, 0.9)]) },
   { id: 'impianti', file: 'impianti', label: 'Impianti e vasche', type: 'point',
     legendSvg: Object.keys(IMP_STY).map(k => [IMP_STY[k].label, impSvg(k, 18)]) },
 ];
@@ -222,7 +245,7 @@ async function loadVectors() {
       } else if (v.id === 'pozzetti') {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
-          pointToLayer: (f, ll) => L.circleMarker(ll, { pane: 'vett', radius: 6, color: '#801119', weight: 1.5, fillColor: POZZ_COL[f.properties.classificazione] || '#999', fillOpacity: 1 }),
+          pointToLayer: (f, ll) => L.marker(ll, { icon: pozzIcon(f.properties.classificazione) }),
           onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.classificazione || 'Pozzetto', { Tipologia: f.properties.Tipologia, Note: f.properties.Note }, '', docsHtml('pozzetti', f.properties.classificazione)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       } else {
@@ -241,7 +264,8 @@ async function loadVectors() {
 }
 
 function symSvg(v) {
-  if (v.id === 'impianti') return `<svg width="34" height="18" viewBox="-8 0 34 18">${impSvg('nuovo', 18).replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>`;
+  if (v.id === 'pozzetti') return `<svg width="34" height="18" viewBox="-9 0 34 24">${POZZ_SYM['Pozzetto di SCARICO CON SARACINESCA'].g}</svg>`;
+  if (v.id === 'impianti') return `<span style="display:inline-grid;width:34px;place-items:center">${impSvg('nuovo', 18)}</span>`;
   if (v.type === 'point') {
     const c = '#4686fb';
     return `<svg width="34" height="16"><circle cx="17" cy="8" r="6" fill="${c}" stroke="${v.id === 'impianti' ? '#232323' : '#801119'}" stroke-width="1.5"/></svg>`;
