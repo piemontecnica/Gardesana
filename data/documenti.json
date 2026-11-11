@@ -144,6 +144,18 @@
    "rev": "001",
    "file": "docs/C-5-001_Nuovo_IS_San_Severo_opere_provvisionali.pdf",
    "mb": 0.6
+  },
+  "B-65": {
+   "titolo": "Attraversamento Progno San Severo e sottopasso pedonale A",
+   "rev": "001",
+   "file": "docs/B-65-001_Attraversamento_Progno_San_Severo_e_sottopasso_A.pdf",
+   "mb": 16.2
+  },
+  "B-66": {
+   "titolo": "Attraversamento sottopasso pedonale B – piante, sezioni e particolari",
+   "rev": "001",
+   "file": "docs/B-66-001_Attraversamento_sottopasso_pedonale_B.pdf",
+   "mb": 9.0
   }
  },
  "collegamenti": {
@@ -169,7 +181,8 @@
     "C-18"
    ],
    "VASCA DI CALMA": [
-    "B-64"
+    "B-65",
+    "B-66"
    ],
    "IS ESISTENTE CISANO": [
     "B-69"

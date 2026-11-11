@@ -29,6 +29,7 @@
 <div id="sidebtns">
   <button class="rb" id="btnLayers" title="Livelli e legenda"><svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Zm-7.6 8.8L2 13l10 5 10-5-2.4-1.2L12 15.6 4.4 11.8Zm0 4.9L2 17.9l10 5 10-5-2.4-1.2L12 20.5l-7.6-3.8Z"/></svg></button>
   <button class="rb" id="btnGps" title="Posizione GPS"><svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 3h-2.06A7 7 0 0 0 13 5.06V3h-2v2.06A7 7 0 0 0 5.06 11H3v2h2.06A7 7 0 0 0 11 18.94V21h2v-2.06A7 7 0 0 0 18.94 13H21v-2Zm-9 6a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></svg></button>
+  <button class="rb" id="btnFit" title="Vista di tutta l'area dei lavori"><svg viewBox="0 0 24 24"><path d="M3 9V3h6v2H5v4H3Zm12-6h6v6h-2V5h-4V3ZM3 15h2v4h4v2H3v-6Zm16 0h2v6h-6v-2h4v-4Z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="rb" id="btnMeasure" title="Misura distanze"><svg viewBox="0 0 24 24"><path d="M3 17.3 17.3 3l3.7 3.7L6.7 21 3 17.3Zm4.2.9 1.4-1.4-1.5-1.5 1-1 1.5 1.5 1.4-1.4-1.5-1.5 1-1 1.5 1.5 1.4-1.4-1.5-1.5 1-1 1.5 1.5 1.4-1.4-1.5-1.5 1-1 1.5 1.5.9-.9-1.6-1.6L5.1 17.3l1.6 1.6.5-.7Z"/></svg></button>
   <button class="rb" id="btnTrack" title="Registra traccia"><svg viewBox="0 0 24 24"><path d="M5 20a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm14-12a2 2 0 1 1 0-4 2 2 0 0 1 0 4ZM6.5 16.6l-1.4-1.4L9 11.3c.8-.8 2-.8 2.8 0l1 1 4.1-4.1 1.4 1.4-4.1 4.1c-.8.8-2 .8-2.8 0l-1-1-3.9 3.9Z"/></svg></button>
   <button class="rb" id="btnList" title="Elenco punti ed esportazione"><svg viewBox="0 0 24 24"><path d="M4 6h2v2H4V6Zm4 0h12v2H8V6Zm-4 5h2v2H4v-2Zm4 0h12v2H8v-2Zm-4 5h2v2H4v-2Zm4 0h12v2H8v-2Z"/></svg></button>
@@ -193,6 +194,8 @@
       <li><span class="ii" data-ico="btnLayers"></span><div><b>Livelli</b> – accendi o spegni gli strati, regola la trasparenza, vai a un foglio.</div></li>
       <li><span class="ii dot"></span><div><b>Tocca un impianto o un pozzetto</b> – vedi le tavole PDF collegate e aprile.</div></li>
       <li><span class="ii" data-ico="btnGps"></span><div><b>GPS</b> – mostra dove sei; tocca di nuovo per seguirti.</div></li>
+      <li><span class="ii" data-ico="btnFit"></span><div><b>Vista lavori</b> – torna a vedere tutta l'area dei lavori.</div></li>
+      <li><span class="ii"><svg viewBox="0 0 24 24"><path d="M12 2 8 12h8L12 2Z"/><path d="M8 12l4 10 4-10H8Z" opacity=".35"/></svg></span><div><b>Ruota la mappa</b> con due dita; la <b>bussola</b> in alto a sinistra la riporta a Nord.</div></li>
       <li><span class="ii fabi">+</span><div><b>Punto</b> – segna un punto con note, priorità e foto.</div></li>
       <li><span class="ii" data-ico="btnTrack"></span><div><b>Traccia</b> registra il percorso, <span class="ii in" data-ico="btnMeasure"></span><b>Misura</b> le distanze.</div></li>
       <li><span class="ii" data-ico="btnList"></span><div><b>Elenco</b> – rivedi i punti ed <b>esporta lo ZIP</b> a fine sopralluogo.</div></li>
@@ -208,6 +211,7 @@
 <div id="viewer" hidden><img alt=""><button class="x">×</button></div>
 
 <script src="lib/leaflet.js"></script>
+<script src="lib/leaflet-rotate.js"></script>
 <script src="lib/jszip.min.js"></script>
 <script src="app.js"></script>
 </body>

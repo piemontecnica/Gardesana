@@ -82,10 +82,11 @@ const DB = {
 };
 
 /* ---------------- mappa ---------------- */
-const map = L.map('map', { zoomControl: true, maxZoom: 22, attributionControl: true }).setView(CFG.center, CFG.zoom);
+const map = L.map('map', { zoomControl: true, maxZoom: 22, attributionControl: true,
+  rotate: true, touchRotate: true, bearing: 0, rotateControl: { closeOnZeroBearing: false, position: 'topleft' } }).setView(CFG.center, CFG.zoom);
 L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
-map.createPane('tavole').style.zIndex = 250;
-map.createPane('vett').style.zIndex = 420;
+map.createPane('tavole', map.getPane('rotatePane') || undefined).style.zIndex = 250; // dentro il pane che ruota
+map.createPane('vett', map.getPane('rotatePane') || undefined).style.zIndex = 420;
 
 const basi = {
   sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -117,6 +118,25 @@ const POZZ_COL = {
   'Pozzetto di SCARICO CON SARACINESCA': '#a4fc3c', 'Pozzetto di SCARICO SEMPLICE': '#fbb938',
   'Pozzetto di SFIATO CON SARACINESCA': '#e3440a', 'Pozzetto di SFIATO SEMPLICE': '#7a0403',
 };
+/* simboli impianti (come planimetria generale B-4: cerchio con triangolo) e vasche (quadrato blu) */
+const IMP_STY = {
+  nuovo: { label: 'Nuovo impianto di sollevamento', fill: '#e03131', stroke: '#7a0a0a' },
+  adeguare: { label: 'Impianto esistente da adeguare', fill: '#d63cc8', stroke: '#6b1563', halo: '#8fe3ee' },
+  esistente: { label: 'Impianto esistente', fill: '#d63cc8', stroke: '#6b1563' },
+  vasca: { label: 'Vasca (calma, rompitratta)', fill: '#1c7ed6', stroke: '#0b3d73' },
+};
+function impClass(t = '') {
+  if (/vasca/i.test(t)) return 'vasca';
+  if (/nuov/i.test(t)) return 'nuovo';
+  if (/potenz|adegu/i.test(t)) return 'adeguare';
+  return 'esistente';
+}
+function impSvg(k, s = 28) {
+  const st = IMP_STY[k];
+  if (k === 'vasca') return `<svg width="${s}" height="${s}" viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="4" fill="${st.fill}" stroke="${st.stroke}" stroke-width="2"/><path d="M7 12c2-2 3-2 5 0s3 2 5 0 3-2 5 0M7 18c2-2 3-2 5 0s3 2 5 0 3-2 5 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`;
+  return `<svg width="${s}" height="${s}" viewBox="0 0 28 28">${st.halo ? `<circle cx="14" cy="14" r="13" fill="${st.halo}" stroke="#5aa9b5" stroke-width="1"/>` : ''}<circle cx="14" cy="14" r="${st.halo ? 9.5 : 11}" fill="${st.fill}" stroke="${st.stroke}" stroke-width="2"/><path d="M14 ${st.halo ? 8 : 7}l${st.halo ? 5.5 : 6.5} ${st.halo ? 9.5 : 11}h-${st.halo ? 11 : 13}z" fill="#fff"/></svg>`;
+}
+function impIcon(k) { return L.divIcon({ className: 'imp-ico', html: impSvg(k), iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12], tooltipAnchor: [12, 0] }); }
 const CHIUS_COL = { 'chiusura completa strada comunale': '#ff0003' }; // altri: arancio
 const VEC = [
   { id: 'tub_ghisa', file: 'tub_ghisa', label: 'Condotta in progetto – Ghisa DN600', type: 'line',
@@ -131,7 +151,8 @@ const VEC = [
     styles: [{ color: '#b2df8a', weight: 6 }, { color: '#0e9c43', weight: 2, dashArray: '8 4 2 4' }] },
   { id: 'pozzetti', file: 'pozzetti', label: 'Camere e pozzetti', type: 'point', cat: 'classificazione',
     legend: Object.entries(POZZ_COL).map(([k, v]) => [k.replace('Pozzetto di ', ''), v]) },
-  { id: 'impianti', file: 'impianti', label: 'Impianti e vasche', type: 'point' },
+  { id: 'impianti', file: 'impianti', label: 'Impianti e vasche', type: 'point',
+    legendSvg: Object.keys(IMP_STY).map(k => [IMP_STY[k].label, impSvg(k, 18)]) },
 ];
 const vecLayers = {};
 const vecData = {};
@@ -207,8 +228,8 @@ async function loadVectors() {
       } else {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
-          pointToLayer: (f, ll) => L.circleMarker(ll, { pane: 'vett', radius: 9, color: '#232323', weight: 2, fillColor: '#a47158', fillOpacity: 1 })
-            .bindTooltip(f.properties.Tipologia || '', { permanent: true, direction: 'right', offset: [10, 0], className: 'foglio-lbl' }),
+          pointToLayer: (f, ll) => L.marker(ll, { icon: impIcon(impClass(f.properties.Tipologia)) })
+            .bindTooltip(f.properties.Tipologia || '', { permanent: true, direction: 'right', offset: [4, 0], className: 'foglio-lbl' }),
           onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.Tipologia || 'Impianto', { Note: f.properties.Note }, '', docsHtml('impianti', f.properties.Tipologia)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       }
@@ -220,8 +241,9 @@ async function loadVectors() {
 }
 
 function symSvg(v) {
+  if (v.id === 'impianti') return `<svg width="34" height="18" viewBox="-8 0 34 18">${impSvg('nuovo', 18).replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>`;
   if (v.type === 'point') {
-    const c = v.id === 'impianti' ? '#a47158' : '#4686fb';
+    const c = '#4686fb';
     return `<svg width="34" height="16"><circle cx="17" cy="8" r="6" fill="${c}" stroke="${v.id === 'impianti' ? '#232323' : '#801119'}" stroke-width="1.5"/></svg>`;
   }
   const st = v.styles || v.styleFn({});
@@ -239,6 +261,11 @@ function buildLegend() {
       ls('vis_' + v.id, e.target.checked ? '1' : '0');
     };
     box.appendChild(row);
+    if (v.legendSvg) {
+      const sub = document.createElement('div'); sub.className = 'sub';
+      sub.innerHTML = v.legendSvg.map(([l, svg]) => `<div class="row"><span class="sym" style="width:34px;display:inline-grid;place-items:center">${svg}</span>${esc(l)}</div>`).join('');
+      box.appendChild(sub);
+    }
     if (v.legend) {
       const sub = document.createElement('div'); sub.className = 'sub';
       sub.innerHTML = v.legend.map(([l, c]) => `<div class="row"><span class="sym">${v.type === 'point'
@@ -824,7 +851,21 @@ document.addEventListener('click', e => {
   openPdf(a.dataset.doc, a.textContent.trim());
 });
 
+/* ---------------- vista di tutta l'area dei lavori ---------------- */
+function worksBounds() {
+  const b = L.latLngBounds([]);
+  ['tub_ghisa', 'tub_prfv', 'tub_pead', 'impianti', 'pozzetti'].forEach(id => { if (vecData[id]) b.extend(L.geoJSON(vecData[id]).getBounds()); });
+  return b.isValid() ? b : null;
+}
+function fitWorks(animate = true) {
+  const b = worksBounds(); if (!b) return;
+  if (map.setBearing && map.getBearing && map.getBearing()) map.setBearing(0);
+  map.fitBounds(b, { paddingTopLeft: [20, 80], paddingBottomRight: [70, 60], animate });
+}
+$('#btnFit').onclick = () => fitWorks();
+
 /* ---------------- guida rapida ---------------- */
+{ const d = document.querySelector('#intro .ii.dot'); if (d) { d.classList.remove('dot'); d.innerHTML = impSvg('nuovo', 24); } }
 document.querySelectorAll('#intro [data-ico]').forEach(el => { const src = document.getElementById(el.dataset.ico); if (src) el.innerHTML = src.innerHTML; });
 function showIntro() { $('#introHide').checked = ls('introHide') === '1'; $('#intro').hidden = false; }
 $('#introOk').onclick = () => { ls('introHide', $('#introHide').checked ? '1' : '0'); $('#intro').hidden = true; };

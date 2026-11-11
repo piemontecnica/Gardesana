@@ -19,8 +19,10 @@ Nota: un repo pubblico rende visibili le tavole a chiunque abbia il link (GitHub
 
 ## Uso in campo
 - **Punto**: mirino al centro mappa, "Usa GPS" o sposta la mappa, poi Conferma → categoria, titolo, note, priorità, foto (fotocamera o galleria). Il foglio di progetto viene riconosciuto in automatico.
+- **Vista lavori** (tasto con i quattro angoli): riporta la mappa su tutta l'area dei lavori, con il Nord in alto.
 - **GPS**: primo tocco attiva la posizione, poi alterna "segui posizione".
 - **Traccia**: registra il percorso fatto (pulsante rosso durante la registrazione).
+- **Rotazione**: ruota la mappa con due dita; la bussola in alto a sinistra riporta a Nord.
 - **Misura**: distanze cumulate toccando la mappa.
 - **Livelli**: sfondo satellite/stradale, opacità tavole, planimetria generale, quadro d'unione, "Vai al foglio", download offline delle planimetrie (~40 MB).
 - **Tavole PDF**: tocca un impianto, una vasca o un pozzetto per vedere le tavole collegate e aprirle nel visualizzatore interno (zoom con due dita, pulsante "‹ Mappa" per tornare). In Livelli → "Scarica tavole PDF per uso offline" (~68 MB) le salva sul telefono; nel popup compare "✓ offline" accanto a quelle già scaricate.
