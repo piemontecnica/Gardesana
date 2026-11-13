@@ -1,5 +1,5 @@
 {
- "_nota": "Elenco tavole collegate agli elementi della mappa. Per aggiungere una tavola: copia il PDF in docs/, aggiungilo in 'tavole' e collega il codice all'elemento (chiave = Tipologia per impianti, classificazione per pozzetti).",
+ "_nota": "Elenco tavole collegate agli elementi della mappa. Per aggiungere una tavola: copia il PDF in docs/, aggiungilo in 'tavole' e collega il codice all'elemento (chiave = Tipologia per impianti, classificazione per pozzetti). 'per_posizione': tavole in più solo per gli elementi entro 'raggio_m' dal punto indicato.",
  "tavole": {
   "B-63": {
    "titolo": "Particolari costruttivi collettore in pressione GH600",
@@ -181,8 +181,7 @@
     "C-18"
    ],
    "VASCA DI CALMA": [
-    "B-65",
-    "B-66"
+    "B-65"
    ],
    "IS ESISTENTE CISANO": [
     "B-69"
@@ -221,5 +220,17 @@
     "B-63"
    ]
   }
- }
+ },
+ "per_posizione": [
+  {
+   "nota": "Scarico semplice e sfiato semplice nel tratto in spingitubo (tavola B-66)",
+   "gruppo": "pozzetti",
+   "lon": 10.72898,
+   "lat": 45.5249,
+   "raggio_m": 15,
+   "tavole": [
+    "B-66"
+   ]
+  }
+ ]
 }

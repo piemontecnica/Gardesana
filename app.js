@@ -196,8 +196,12 @@ async function loadDocs() {
   const info = $('#docsInfo'); if (info) info.textContent = `${n} tavole PDF di impianti, vasche e pozzetti (~${Math.round(mb)} MB).`;
   refreshDocsState();
 }
-function docsHtml(group, key) {
-  const codes = (DOCS.collegamenti[group] || {})[key] || [];
+function docsHtml(group, key, ll) {
+  let codes = (DOCS.collegamenti[group] || {})[key] || [];
+  if (ll && DOCS.per_posizione) for (const r of DOCS.per_posizione) {
+    if (r.gruppo === group && L.latLng(r.lat, r.lon).distanceTo(ll) <= (r.raggio_m || 10)) codes = [...r.tavole, ...codes];
+  }
+  codes = [...new Set(codes)];
   if (!codes.length) return '';
   const items = codes.map(c => DOCS.tavole[c]).filter(Boolean).map(d => {
     const code = d.file.replace(/^docs\//, '').split('_')[0];
@@ -246,14 +250,14 @@ async function loadVectors() {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
           pointToLayer: (f, ll) => L.marker(ll, { icon: pozzIcon(f.properties.classificazione) }),
-          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.classificazione || 'Pozzetto', { Tipologia: f.properties.Tipologia, Note: f.properties.Note }, '', docsHtml('pozzetti', f.properties.classificazione)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
+          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.classificazione || 'Pozzetto', { Tipologia: f.properties.Tipologia, Note: f.properties.Note }, '', docsHtml('pozzetti', f.properties.classificazione, L.latLng(f.geometry.coordinates[1], f.geometry.coordinates[0]))), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       } else {
         lyr = L.geoJSON(gj, {
           pane: 'vett',
           pointToLayer: (f, ll) => L.marker(ll, { icon: impIcon(impClass(f.properties.Tipologia)) })
             .bindTooltip(f.properties.Tipologia || '', { permanent: true, direction: 'right', offset: [4, 0], className: 'foglio-lbl' }),
-          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.Tipologia || 'Impianto', { Note: f.properties.Note }, '', docsHtml('impianti', f.properties.Tipologia)), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
+          onEachFeature: (f, l) => l.bindPopup(popupHtml(f.properties.Tipologia || 'Impianto', { Note: f.properties.Note }, '', docsHtml('impianti', f.properties.Tipologia, L.latLng(f.geometry.coordinates[1], f.geometry.coordinates[0]))), { maxWidth: 320, maxHeight: 380, autoPanPaddingTopLeft: [10, 80], autoPanPaddingBottomRight: [70, 40] }),
         });
       }
       vecLayers[v.id] = lyr;
